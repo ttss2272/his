@@ -1,0 +1,11 @@
+﻿<Window x:Class="Wpf_Image.Admin.Controls"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Controls" Height="300" Width="300">
+    <Grid>        
+        <Image Height="44" HorizontalAlignment="Left" Margin="146,5,0,0" Name="image1" Stretch="Fill" VerticalAlignment="Top" Width="126" Source="/Images/logo5.png" />
+        <Label Content="Select One Control" FontWeight="Bold" Height="28" HorizontalAlignment="Left" Margin="75,78,0,0" Name="label1" VerticalAlignment="Top" Width="122" />
+        <RadioButton Content="Gesture Control" ForceCursor="False" Height="26" HorizontalAlignment="Left" Margin="88,112,0,0" Name="radioButton1" VerticalAlignment="Top" />
+        <RadioButton Content="Touch Pad Control" Height="26" HorizontalAlignment="Left" Margin="87,142,0,0" Name="radioButton2" VerticalAlignment="Top" />
+    </Grid>
+</Window>
