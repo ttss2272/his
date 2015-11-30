@@ -19,6 +19,7 @@ namespace Wpf_Image.Admin
     /// </summary>
     public partial class Category : Window
     {
+        
         clCategory objCategory = new clCategory();
         public Category()
         {
@@ -49,6 +50,23 @@ namespace Wpf_Image.Admin
         { 
         
         }
+        #region----------------------WindowLoaded()-----------------------
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            BindGrid();
+        }
+        #endregion
+        /*
+         * Created By:-Sameer Shinde
+         * Date:-30/11/2015
+         * Purpose:-Bind data to gridview
+         */
+        #region---------------------BindGrid-----------------------------
+        private void BindGrid()
+        {
+            
+        }
+        #endregion
 
     }
 }

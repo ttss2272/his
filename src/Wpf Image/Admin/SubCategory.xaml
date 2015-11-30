@@ -1,0 +1,50 @@
+﻿<Window x:Class="Wpf_Image.Admin.SubCategory"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SubCategory" Height="457" Width="833" Loaded="Window_Loaded">
+    <Grid>
+        <GroupBox Header="" Height="252" HorizontalAlignment="Left" Margin="597,0,0,54" Name="groupBox1" VerticalAlignment="Bottom" Width="200">
+            <Grid Height="203">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="16*" />
+                    <ColumnDefinition Width="172*" />
+                </Grid.ColumnDefinitions>
+                <Button Click="btnAdd_Click" Content="Add" Grid.Column="1" Height="26" HorizontalAlignment="Left" Margin="38,28,0,0" Name="btnAdd" VerticalAlignment="Top" Width="75" />
+                <Button Click="btnDelete_Click" Content="Delete" Grid.Column="1" Height="26" HorizontalAlignment="Left" Margin="38,85,0,0" Name="btnDelete" VerticalAlignment="Top" Width="75" />
+                <Button Content="Cancel" Grid.Column="1" Height="26" HorizontalAlignment="Left" Margin="38,138,0,0" Name="btnCancel" VerticalAlignment="Top" Width="75" />
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="" Height="332" HorizontalAlignment="Left" Margin="10,95,0,0" Name="groupBox2" VerticalAlignment="Top" Width="581">
+            <Grid Width="567">
+                <DataGrid AutoGenerateColumns="False" CanUserResizeColumns="False" Height="303" HorizontalAlignment="Left" IsReadOnly="True" ItemsSource="{Binding}" Margin="-1,0,0,0" Name="dvCategory" VerticalAlignment="Top" Width="562" SelectionChanged="dvCategory_SelectionChanged">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding CategoryID}" Header="Sub CategoryID" Visibility="Hidden" />
+                        <DataGridTextColumn Binding="{Binding CategoryName}" Header="Sub Category Name" Width="100" />
+                    </DataGrid.Columns>
+                    <DataGrid.ItemContainerStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="Control.MouseDoubleClick" HandledEventsToo="True" Handler="Row_DoubleClick" />
+                        </Style>
+                    </DataGrid.ItemContainerStyle>
+                </DataGrid>
+            </Grid>
+        </GroupBox>
+        <GroupBox Header="" Height="99" HorizontalAlignment="Left" Margin="4,7,0,0" Name="groupBox3" VerticalAlignment="Top" Width="575">
+            <Grid>
+                <Label Content="Sub Category Name" Height="28" HorizontalAlignment="Left" Margin="6,43,0,0" Name="label1" VerticalAlignment="Top" />
+                <TextBox Height="23" HorizontalAlignment="Left" Margin="125,45,0,0" Name="txtSearchSubCatName" VerticalAlignment="Top" Width="204" />
+                <Button Click="btnSearch_Click" Content="Search" Height="26" HorizontalAlignment="Left" Margin="356,43,0,0" Name="btnSearch" VerticalAlignment="Top" Width="75" />
+                <Label Content="Category Name" Height="28" HorizontalAlignment="Left" Margin="29,9,0,0" Name="label3" VerticalAlignment="Top" />
+                <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,13,234,0" Name="cmbSearchCatName" VerticalAlignment="Top" Width="204" ItemsSource="{Binding}" />
+            </Grid>
+        </GroupBox>
+        <Canvas Height="125" HorizontalAlignment="Left" Margin="577,10,0,0" Name="canvas1" VerticalAlignment="Top" Width="333">
+            <Label Canvas.Left="6" Canvas.Top="37" Content="Sub Category Name" Height="28" Name="label2" Width="119" />
+            <TextBox Canvas.Left="122" Canvas.Top="42" Height="23" Name="txtSubCatName" Width="120" />
+            <Button Canvas.Left="50" Canvas.Top="78" Click="btnSave_Click" Content="Save" Height="23" Name="btnSave" Width="75" />
+            <Button Canvas.Left="145" Canvas.Top="78" Click="btnPanelCancel_Click" Content="Cancel" Height="23" Name="btnPanelCancel" Width="75" />
+            <Label Content="Category Name" Height="28" Name="label4" Canvas.Left="26" Canvas.Top="6" />
+            <ComboBox Height="23" Name="cmbSaveSubCatName" Width="120" Canvas.Left="122" Canvas.Top="10" />
+        </Canvas>
+    </Grid>
+</Window>
