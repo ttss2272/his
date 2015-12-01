@@ -29,6 +29,10 @@ namespace WPF_ImageClassLibrary
             {
                 return Result;
             }
+            else if (Result == "Sub Category Name Already Exists")
+            {
+                return Result;
+            }
             else
             {
                 return "Error To Save";
