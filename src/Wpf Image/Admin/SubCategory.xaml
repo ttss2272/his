@@ -39,7 +39,7 @@
                 <ComboBox Height="23" HorizontalAlignment="Right" Margin="0,13,234,0" Name="cmbSearchCatName" VerticalAlignment="Top" Width="204" ItemsSource="{Binding}" />
             </Grid>
         </GroupBox>
-        <Canvas Height="125" HorizontalAlignment="Left" Margin="577,10,0,0" Name="canvas1" VerticalAlignment="Top" Width="333">
+        <Canvas Height="125" HorizontalAlignment="Left" Margin="577,10,0,0" Name="canvas1" VerticalAlignment="Top" Width="244">
             <Label Canvas.Left="6" Canvas.Top="37" Content="Sub Category Name" Height="28" Name="label2" Width="119" />
             <TextBox Canvas.Left="122" Canvas.Top="42" Height="23" Name="txtSubCatName" Width="120" />
             <Button Canvas.Left="50" Canvas.Top="78" Click="btnSave_Click" Content="Save" Height="23" Name="btnSave" Width="75" />
