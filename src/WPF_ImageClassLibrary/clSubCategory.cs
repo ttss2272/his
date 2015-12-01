@@ -54,7 +54,7 @@ namespace WPF_ImageClassLibrary
             con.Close();
             return ds;
         }
-
+      
         public string DeleteSubCategory(int SubCatId, string UpdatedDate)
         {
             string Result;
@@ -74,6 +74,20 @@ namespace WPF_ImageClassLibrary
             {
                 return "Error To Delete";
             }
+        }
+
+        public DataSet BindSubCategoryName(int CategoryID)
+        {
+            con = conn.getConnection();
+            con.Open();
+            SqlCommand cmd = new SqlCommand("BindSubCategoryName_SP", con);
+            cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sqlDa = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            sqlDa.Fill(ds);
+            con.Close();
+            return ds;
         }
     }
 }
