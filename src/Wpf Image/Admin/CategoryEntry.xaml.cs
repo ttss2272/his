@@ -12,88 +12,42 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using WPF_ImageClassLibrary;
 using System.Data;
+
 namespace Wpf_Image.Admin
 {
     /// <summary>
-    /// Interaction logic for SubCategory.xaml
+    /// Interaction logic for CategoryEntery.xaml
     /// </summary>
-    public partial class SubCategory : Window
+    public partial class CategoryEntery : Window
     {
-        public SubCategory()
+        
+        public CategoryEntery()
         {
             InitializeComponent();
+           
         }
         #region-----------------Declare Variables GlobalVariables()----------------
         clCategory objCategory = new clCategory();
-        clSubCategory objSubCategory = new clSubCategory();
-        int UpID, SubCatId, IsActive, IsDeleted, CategoryID;
-        string SubCategoryName, UpdatedDate;
-
+        int UpID,CatId,IsActive,IsDeleted;
+        string CategoryName, UpdatedDate;
+       
         #endregion
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             canvas1.Visibility = Visibility.Hidden;
             BindGridView();
             btnDelete.IsEnabled = false;
-            BindCategory();
-            cmbSearchCatName.SelectedIndex = 0;
         }
-        #region--------------------------------BindCategory()---------------------------------
-        private void BindCategory()
-        {
-            try
-            {
-                DataSet ds = objCategory.BindCategoryName();
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    
-                    cmbSearchCatName.DisplayMemberPath = ds.Tables[0].Columns["CategoryName"].ToString();
-                    cmbSearchCatName.SelectedValuePath = ds.Tables[0].Columns["CategoryID"].ToString();
-                    cmbSearchCatName.DataContext = ds.Tables[0].DefaultView;
-                    cmbSearchCatName.SelectedValue = "-1";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-        }
-        #endregion
-        #region--------------------------------BindCategoryforAdd()---------------------------------
-        private void BindCategoryforAdd()
-        {
-            try
-            {
-                DataSet ds = objCategory.BindCategoryName();
-                if (ds.Tables[0].Rows.Count > 0)
-                {
-                    
-                    cmbSaveSubCatName.DisplayMemberPath = ds.Tables[0].Columns["CategoryName"].ToString();
-                    cmbSaveSubCatName.SelectedValuePath = ds.Tables[0].Columns["CategoryID"].ToString();
-                    cmbSaveSubCatName.DataContext = ds.Tables[0].DefaultView;
-                    cmbSaveSubCatName.SelectedValue = "-1";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message.ToString());
-            }
-        }
-        #endregion
-        
         #region--------------------------------btnAdd_Click----------------------------------
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            btnSave.Content = "Save";
-            cmbSaveSubCatName.SelectedIndex = 0;
             ClearFields();
-            BindCategoryforAdd();
             dvCategory.Visibility = Visibility.Hidden;
             canvas1.Visibility = Visibility.Visible;
-            canvas1.Margin = new Thickness(150, 125, 0, 0);
-            txtSearchSubCatName.IsEnabled = false;
+            canvas1.Margin = new Thickness(138, 93, 0, 0);
+            txtSearchCatName.IsEnabled = false;
             btnSearch.IsEnabled = false;
-            cmbSearchCatName.IsEnabled = false;
+            
         }
         #endregion
         /*
@@ -104,20 +58,14 @@ namespace Wpf_Image.Admin
         #region---------------------------ClearFields()---------------------------------------
         private void ClearFields()
         {
-            BindCategory();
-            BindCategoryforAdd();
-            txtSearchSubCatName.Text = "";
-            txtSubCatName.Text = "";
+            txtSearchCatName.Text = "";
+            txtCatName.Text = "";
             canvas1.Visibility = Visibility.Hidden;
             dvCategory.Visibility = Visibility.Visible;
             BindGridView();
-            txtSearchSubCatName.IsEnabled = true;
+            txtSearchCatName.IsEnabled = true;
             btnSearch.IsEnabled = true;
             btnDelete.IsEnabled = false;
-            cmbSearchCatName.IsEnabled = true;
-            cmbSearchCatName.SelectedIndex = 0;
-            cmbSaveSubCatName.SelectedIndex = 0;
-
         }
         #endregion
         /*
@@ -128,7 +76,7 @@ namespace Wpf_Image.Admin
         #region------------------------BindGridView()-------------------------------------------
         private void BindGridView()
         {
-            DataSet ds = objSubCategory.BindCategoryInSub(0,CategoryID, txtSearchSubCatName.Text);
+            DataSet ds = objCategory.BindCategory(0, txtSearchCatName.Text);
             if (ds.Tables[0].Rows.Count > 0)
             {
                 dvCategory.ItemsSource = ds.Tables[0].DefaultView;
@@ -140,7 +88,7 @@ namespace Wpf_Image.Admin
             }
         }
         #endregion
-
+        
         /*
          * Created By:-Sameer A. Shinde
          * Date:-30/11/2015
@@ -153,7 +101,7 @@ namespace Wpf_Image.Admin
             {
                 if (Validate())
                 {
-                    
+                    Validate();
                     SetParameters();
                     SaveDetails();
                     BindGridView();
@@ -164,10 +112,10 @@ namespace Wpf_Image.Admin
             {
                 MessageBox.Show(ex.Message.ToString());
             }
-
+            
         }
 
-
+        
         #endregion
         /*
          * Created By:-Sameer A. Shinde
@@ -177,9 +125,8 @@ namespace Wpf_Image.Admin
         #region--------------------------SetParameters()-----------------------------------------------
         private void SetParameters()
         {
-            SubCatId = UpID;
-            CategoryID =Convert.ToInt32(cmbSaveSubCatName.SelectedValue);
-            SubCategoryName = txtSubCatName.Text;
+            CatId = UpID;
+            CategoryName = txtCatName.Text;
             IsActive = 1;
             IsDeleted = 0;
             UpdatedDate = DateTime.Now.ToString("yyyy-MM-dd hh:MM:ss tt");
@@ -196,7 +143,7 @@ namespace Wpf_Image.Admin
         {
             try
             {
-                string result = objSubCategory.SaveSubCategory(SubCatId, CategoryID,SubCategoryName, IsActive, IsDeleted);
+                string result = objCategory.saveCategory(CatId,CategoryName,IsActive,IsDeleted);
 
                 MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
                 ClearFields();
@@ -216,61 +163,42 @@ namespace Wpf_Image.Admin
         #region------------------Validate()------------------------------------------------
         private bool Validate()
         {
-            if (cmbSaveSubCatName.SelectedValue == "-1")
+            if (txtCatName.Text.Trim() == "")
             {
-                MessageBox.Show("Please Select Catregory.", "Category Name Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                cmbSaveSubCatName.Focus();
-                    return false;
-            }
-            else if (txtSubCatName.Text.Trim() == "")
-            {
-                MessageBox.Show("Please Enter Sub Category Name.", "Sub Category Name Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtSubCatName.Focus();
+                MessageBox.Show("Please Enter Category Name.", "Category Name Error", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return false;
             }
-
-            else if (cmbSaveSubCatName.Text == "")
-            {
-                MessageBox.Show("Please Select Category Name.", "Category Name Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-
-                return false;
-            }
-
+            
             else
             {
                 return true;
             }
         }
         #endregion
-        
         #region---------------------RowDoubleclick------------------------------------------
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
             dvCategory.Visibility = Visibility.Hidden;
             canvas1.Visibility = Visibility.Visible;
-            canvas1.Margin = new Thickness(150, 125, 0, 0);
-            cmbSearchCatName.IsEnabled = false;
-            txtSearchSubCatName.IsEnabled = false;
+            canvas1.Margin = new Thickness(138, 93, 0, 0);
+            txtSearchCatName.IsEnabled = false;
             btnSearch.IsEnabled = false;
             try
             {
                 object item = dvCategory.SelectedItem;
                 string CategoryName = (dvCategory.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
-                string SubCategoryName = (dvCategory.SelectedCells[2].Column.GetCellContent(item) as TextBlock).Text;
 
 
 
-                DataSet ds = objSubCategory.BindCategoryInSub(0,CategoryID,SubCategoryName);
+                DataSet ds = objCategory.BindCategory(0, CategoryName);
                 if (ds.Tables.Count > 0)
                 {
                     if (ds.Tables[0].Rows.Count > 0)
                     {
 
-                        UpID = Convert.ToInt32(ds.Tables[0].Rows[0]["SubCategoryID"]);
-                        BindCategoryforAdd();
-                        cmbSaveSubCatName.Text = ds.Tables[0].Rows[0]["CategoryName"].ToString();
-                        txtSubCatName.Text = ds.Tables[0].Rows[0]["SubCategoryName"].ToString();
-
+                        UpID = Convert.ToInt32(ds.Tables[0].Rows[0]["CategoryID"]);
+                        txtCatName.Text = ds.Tables[0].Rows[0]["CategoryName"].ToString();
+                        
 
                         btnDelete.IsEnabled = true;
                         btnSave.Content = "Update";
@@ -316,12 +244,12 @@ namespace Wpf_Image.Admin
         {
             if (UpID != 0)
             {
-                SubCatId = UpID;
+                CatId = UpID;
 
-                string Result = objSubCategory.DeleteSubCategory(SubCatId, UpdatedDate);
-                if (Result == "Sub Category Deleted Sucessfully!!!")
+                string Result = objCategory.DeleteCategory(CatId,UpdatedDate);
+                if (Result == "Category Deleted Sucessfully!!!")
                 {
-                    MessageBox.Show(Result, "Sub Category Delete Sucessfully", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(Result, "Category Delete Sucessfully", MessageBoxButton.OK, MessageBoxImage.Information);
                     ClearFields();
                 }
                 else
@@ -341,13 +269,14 @@ namespace Wpf_Image.Admin
         {
             try
             {
-                if (!string.IsNullOrEmpty(txtSearchSubCatName.Text.Trim()))
+                if (!string.IsNullOrEmpty(txtSearchCatName.Text.Trim()))
                 {
-                    DataSet ds = objSubCategory.BindCategoryInSub(0,CategoryID,txtSearchSubCatName.Text);
+                    DataSet ds = objCategory.BindCategory(0, txtSearchCatName.Text);
                     if (ds.Tables[0].Rows.Count > 0)
                     {
                         dvCategory.ItemsSource = ds.Tables[0].DefaultView;
-                      
+                        //grdvSubject.DataContext = ds.Tables[0].DefaultView;
+                        //grdvSubject.Columns[0].Visibility = Visibility.Collapsed;
                     }
                     else
                     {
@@ -357,8 +286,8 @@ namespace Wpf_Image.Admin
                 }
                 else
                 {
-                    MessageBox.Show("Please Enter Sub Category Name", "Message", MessageBoxButton.OK, MessageBoxImage.Warning);
-                    txtSearchSubCatName.Focus();
+                    MessageBox.Show("Please Enter Category Name", "Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtSearchCatName.Focus();
                 }
             }
             catch (Exception ex)
@@ -367,11 +296,6 @@ namespace Wpf_Image.Admin
             }
         }
         #endregion
-
-        private void dvCategory_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
         private void btnCancel_Click(object sender, RoutedEventArgs e)
         {
