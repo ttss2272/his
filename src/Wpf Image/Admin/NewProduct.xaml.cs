@@ -31,7 +31,7 @@ namespace Wpf_Image.Admin
         clSubCategory objSubCategory = new clSubCategory();
         clProduct objProduct = new clProduct();
         int UpID, ProductId,SubCategoryID, IsActive, IsDeleted, CategoryID;
-        string ProductName, ImagePath, UpdatedDate, filepath;
+        string ProductName, ImagePath, UpdatedDate, filepath,CatgoryName,SubCategoryName;
 
         #endregion
         #region------------------------------Window_Loaded()-----------------------
@@ -78,18 +78,7 @@ namespace Wpf_Image.Admin
         #region------------------------btnAdd_Click()------------------------------------------------
         private void btnAdd_Click(object sender, RoutedEventArgs e)
         {
-            btnSave.Content = "Save";
-            cmbAddCatName.SelectedIndex = 0;
-            ClearFields();
-            txtAddImagePath.IsEnabled = false;
-            dgvProduct.Visibility = Visibility.Hidden;
-            canvas1.Visibility = Visibility.Visible;
-            canvas1.Margin = new Thickness(150, 155, 0, 0);
-            cmbSearchCatName.IsEnabled = false;
-            cmbSubCatName.IsEnabled = false;
-            txtProductName.IsEnabled = false;
-            btnSearch.IsEnabled = false;
-            cmbSearchCatName.IsEnabled = false;
+           
         }
         #endregion
         /*
@@ -128,19 +117,22 @@ namespace Wpf_Image.Admin
         private void BindGridView()
         {
             DataSet ds = objProduct.BindProductToGrid(0, Convert.ToInt32(cmbSearchCatName.SelectedValue), Convert.ToInt32(cmbSubCatName.SelectedValue), txtProductName.Text);
+            
             if (ds.Tables[0].Rows.Count > 0)
             {
+
                 dgvProduct.ItemsSource = ds.Tables[0].DefaultView;
-                string imaPath = ds.Tables[0].Rows[0]["ImagePath"].ToString();
-                string name = null;
-                //name = System.IO.Path.GetFileName(filepath);
-                string destinationPath = GetDestinationPath(name, "\\Images\\Admin\\Image");
-                System.Windows.Media.Imaging.BitmapImage logo = new System.Windows.Media.Imaging.BitmapImage();
-                logo.BeginInit();
-                BitmapImage btm = new BitmapImage(new Uri(destinationPath, UriKind.Relative));
-                logo.UriSource = new Uri(destinationPath + imaPath);
-                logo.EndInit();
-               // dgvProduct.ItemsSource = ds.Tables[0].Columns["logo"].ToString();
+
+                //string ImagePaths = ds.Tables[0].Rows[0]["ImagePath"].ToString();
+                //string name = null;
+                
+                //string destinationPath = GetDestinationPath(name, "\\Images\\Admin\\Image");
+                //System.Windows.Media.Imaging.BitmapImage logo = new System.Windows.Media.Imaging.BitmapImage();
+                //logo.BeginInit();
+                //BitmapImage btm = new BitmapImage(new Uri(destinationPath, UriKind.Relative));
+                //logo.UriSource = new Uri(destinationPath + ImagePaths);
+                //logo.EndInit();
+                                
             }
             else
             {
@@ -164,7 +156,7 @@ namespace Wpf_Image.Admin
 
                     SetParameters();
                     SaveDetails();
-                    BindGridView();
+                    //BindGridView();
                     ClearFields();
                 }
             }
@@ -187,9 +179,17 @@ namespace Wpf_Image.Admin
         {
             try
             {
-                string result = objProduct.SaveProduct(ProductId, CategoryID, SubCategoryID,ProductName,ImagePath,IsActive, IsDeleted);
-                string name = System.IO.Path.GetFileName(filepath);
-                string destinationPath = GetDestinationPath(name, "\\Images\\Admin\\Image");
+
+                CatgoryName = cmbAddCatName.Text;
+                SubCategoryName = cmbAddSubCatName.Text;
+                string ProductCount = objProduct.GetProductCount();
+                int count = Convert.ToInt32(ProductCount);
+                count = count + 1;
+                string imgName = txtAddImagePath.Text;
+                string NewImgPath = CatgoryName + SubCategoryName + "00" + count + imgName;
+                string result = objProduct.SaveProduct(ProductId, CategoryID, SubCategoryID, ProductName, NewImgPath, IsActive, IsDeleted);
+               // string name = System.IO.Path.GetFileName(filepath);
+                string destinationPath = GetDestinationPath(NewImgPath, "\\Images\\Admin\\Image");
 
                 File.Copy(filepath, destinationPath, true);
                 MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
@@ -483,5 +483,26 @@ namespace Wpf_Image.Admin
             //}
         }
         #endregion
+
+        private void btnAdd_Click_1(object sender, RoutedEventArgs e)
+        {
+            btnSave.Content = "Save";
+            cmbAddCatName.SelectedIndex = 0;
+            ClearFields();
+            txtAddImagePath.IsEnabled = false;
+            dgvProduct.Visibility = Visibility.Hidden;
+            canvas1.Visibility = Visibility.Visible;
+            canvas1.Margin = new Thickness(150, 155, 0, 0);
+            cmbSearchCatName.IsEnabled = false;
+            cmbSubCatName.IsEnabled = false;
+            txtProductName.IsEnabled = false;
+            btnSearch.IsEnabled = false;
+            cmbSearchCatName.IsEnabled = false;
+        }
+
+        private void btnDelete_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
