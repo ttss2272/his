@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+
 namespace Wpf_Image.Admin
 {
     /// <summary>
@@ -25,7 +26,9 @@ namespace Wpf_Image.Admin
 
         private void btnAdminLogin_Click(object sender, RoutedEventArgs e)
         {
-
+            Admin_Home objAdminHome = new Admin_Home();
+            this.Close();
+            objAdminHome.Show();
         }
     }
 }
