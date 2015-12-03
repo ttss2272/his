@@ -38,7 +38,7 @@ namespace Wpf_Image.Admin
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             canvas1.Visibility = Visibility.Hidden;
-            //BindGridView();
+            BindGridView();
             btnDelete.IsEnabled = false;
             BindCategory();
             cmbSearchCatName.SelectedIndex = 0;
@@ -127,7 +127,26 @@ namespace Wpf_Image.Admin
         #region------------------------BindGridView()-------------------------------------------
         private void BindGridView()
         {
-            
+            DataSet ds = objProduct.BindProductToGrid(0, Convert.ToInt32(cmbSearchCatName.SelectedValue), Convert.ToInt32(cmbSubCatName.SelectedValue), txtProductName.Text);
+            if (ds.Tables[0].Rows.Count > 0)
+            {
+                dgvProduct.ItemsSource = ds.Tables[0].DefaultView;
+                string imaPath = ds.Tables[0].Rows[0]["ImagePath"].ToString();
+                string name = null;
+                //name = System.IO.Path.GetFileName(filepath);
+                string destinationPath = GetDestinationPath(name, "\\Images\\Admin\\Image");
+                System.Windows.Media.Imaging.BitmapImage logo = new System.Windows.Media.Imaging.BitmapImage();
+                logo.BeginInit();
+                BitmapImage btm = new BitmapImage(new Uri(destinationPath, UriKind.Relative));
+                logo.UriSource = new Uri(destinationPath + imaPath);
+                logo.EndInit();
+               // dgvProduct.ItemsSource = ds.Tables[0].Columns["logo"].ToString();
+            }
+            else
+            {
+                dgvProduct.ItemsSource = null;
+                MessageBox.Show("Data Not Found", "Message");
+            }  
         }
         #endregion
         /*
@@ -135,7 +154,7 @@ namespace Wpf_Image.Admin
          * Date:-01/12/2015
          * Purpose:-Save  Product Details 
          */
-        #region------------------------BindGridView()-------------------------------------------
+        #region------------------------btnSave_Click()-------------------------------------------
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -385,6 +404,83 @@ namespace Wpf_Image.Admin
             {
                 MessageBox.Show(ex.Message.ToString());
             }
+        }
+        #endregion
+        /*
+         * Created By:-Sameer A. Shinde
+         * Date:-02/12/2015
+         * Purpose:-Search Product
+         * */
+        #region--------------------------btnSearch_Click()-----------------------------------------------
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                
+                if (!string.IsNullOrEmpty(txtProductName.Text.Trim()))
+                {
+                    DataSet ds = objProduct.BindProductToGrid(0, Convert.ToInt32(cmbSearchCatName.SelectedValue), Convert.ToInt32(cmbSubCatName.SelectedValue), txtProductName.Text);
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
+                        dgvProduct.ItemsSource = ds.Tables[0].DefaultView;
+
+                    }
+                    else
+                    {
+                        dgvProduct.ItemsSource = null;
+                        MessageBox.Show("No Data Available");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Please Enter Product Name", "Message", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    txtProductName.Focus();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+        }
+        #endregion
+        #region---------------------RowDoubleclick------------------------------------------
+        private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            //dvCategory.Visibility = Visibility.Hidden;
+            //canvas1.Visibility = Visibility.Visible;
+            //canvas1.Margin = new Thickness(150, 125, 0, 0);
+            //cmbSearchCatName.IsEnabled = false;
+            //txtSearchSubCatName.IsEnabled = false;
+            //btnSearch.IsEnabled = false;
+            //try
+            //{
+            //    object item = dvCategory.SelectedItem;
+            //    string CategoryName = (dvCategory.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
+            //    string SubCategoryName = (dvCategory.SelectedCells[2].Column.GetCellContent(item) as TextBlock).Text;
+
+
+
+            //    DataSet ds = objSubCategory.BindCategoryInSub(0, CategoryID, SubCategoryName);
+            //    if (ds.Tables.Count > 0)
+            //    {
+            //        if (ds.Tables[0].Rows.Count > 0)
+            //        {
+
+            //            UpID = Convert.ToInt32(ds.Tables[0].Rows[0]["SubCategoryID"]);
+            //            BindCategoryforAdd();
+            //            cmbSaveSubCatName.Text = ds.Tables[0].Rows[0]["CategoryName"].ToString();
+            //            txtSubCatName.Text = ds.Tables[0].Rows[0]["SubCategoryName"].ToString();
+
+
+            //            btnDelete.IsEnabled = true;
+            //            btnSave.Content = "Update";
+            //        }
+            //    }
+            //}
+            //catch (Exception ex)
+            //{
+            //    MessageBox.Show(ex.Message.ToString());
+            //}
         }
         #endregion
     }

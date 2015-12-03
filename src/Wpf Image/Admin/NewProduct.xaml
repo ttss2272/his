@@ -9,10 +9,32 @@
         <ComboBox Height="23" HorizontalAlignment="Right" ItemsSource="{Binding}" Margin="0,54,410,0" Name="cmbSubCatName" VerticalAlignment="Top" Width="204" />
         <Label Content="Product Name" Height="28" HorizontalAlignment="Left" Margin="42,85,0,0" Name="label2" VerticalAlignment="Top" />
         <TextBox Height="23" HorizontalAlignment="Left" Margin="138,90,0,0" Name="txtProductName" VerticalAlignment="Top" Width="204" />
-        <Button Content="Search" Height="26" HorizontalAlignment="Left" Margin="370,88,0,0" Name="btnSearch" VerticalAlignment="Top" Width="75" />
+        <Button Content="Search" Height="26" HorizontalAlignment="Left" Margin="370,88,0,0" Name="btnSearch" VerticalAlignment="Top" Width="75" Click="btnSearch_Click" />
         <GroupBox Header="" Height="289" HorizontalAlignment="Left" Margin="12,154,0,0" Name="groupBox1" VerticalAlignment="Top" Width="724">
             <Grid>
-                <DataGrid AutoGenerateColumns="False" Height="254" HorizontalAlignment="Left" Margin="6,6,0,0" Name="dgvProduct" VerticalAlignment="Top" Width="706" />
+                <DataGrid AutoGenerateColumns="False" Height="254" HorizontalAlignment="Left" Margin="6,6,0,0" Name="dgvProduct" VerticalAlignment="Top" Width="706" ItemsSource="{Binding}" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding ProductID}" Header="ProductID" Visibility="Hidden" />
+                        <DataGridTextColumn Binding="{Binding CategoryName}" Header="Category Name" Width="*" />
+                        <DataGridTextColumn Binding="{Binding SubCategoryName}" Header="Sub Category Name" Width="*" />
+                        <DataGridTextColumn Binding="{Binding ProductName}" Header="ProductName" Width="*" />
+                        <DataGridTextColumn Binding="{Binding ImagePath}" Header="ImagePath" Width="*" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Image Source="{Binding ImagePath}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                    <DataGrid.ItemContainerStyle>
+                        <Style TargetType="DataGridRow">
+                            <EventSetter Event="Control.MouseDoubleClick" HandledEventsToo="True" Handler="Row_DoubleClick" />
+                        </Style>
+                        
+                    </DataGrid.ItemContainerStyle>
+                    
+                </DataGrid>
             </Grid>
         </GroupBox>
         <GroupBox Header="" Height="158" HorizontalAlignment="Left" Margin="542,0,0,601" Name="groupBox2" VerticalAlignment="Bottom" Width="200">
