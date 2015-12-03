@@ -42,5 +42,22 @@ namespace WPF_ImageClassLibrary
                 return "Error To Save";
             }
         }
+
+        public DataSet BindProductToGrid(int productID, int CatID, int SubCatId, string ProductName)
+        {
+            con = conn.getConnection();
+            con.Open();
+            SqlCommand cmd = new SqlCommand("BindProduct_SP", con);
+            cmd.Parameters.AddWithValue("@ProductID", productID);
+            cmd.Parameters.AddWithValue("@CategoryID", CatID);
+            cmd.Parameters.AddWithValue("@SubCategoryID", SubCatId);
+            cmd.Parameters.AddWithValue("@ProductName", ProductName);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sqlDa = new SqlDataAdapter(cmd);
+            DataSet ds = new DataSet();
+            sqlDa.Fill(ds);
+            con.Close();
+            return ds;
+        }
     }
 }
