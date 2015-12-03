@@ -59,5 +59,18 @@ namespace WPF_ImageClassLibrary
             con.Close();
             return ds;
         }
+
+        public string GetProductCount()
+        {
+            string count;
+            con = conn.getConnection();
+            SqlCommand cmd = new SqlCommand("GetProductCount_SP", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            SqlDataAdapter sqlDa = new SqlDataAdapter(cmd);
+            con.Open();
+            count = cmd.ExecuteScalar().ToString();
+            con.Close();
+            return count;
+        }
     }
 }
