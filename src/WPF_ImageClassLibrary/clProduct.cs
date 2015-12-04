@@ -29,18 +29,19 @@ namespace WPF_ImageClassLibrary
             con.Open();
             Result = cmd.ExecuteScalar().ToString();
             con.Close();
-            if ((Result == "Product Save Sucessfully!!!") || (Result == "Product Update Sucessfully!!!"))
-            {
-                return Result;
-            }
-            else if (Result == "Product Name Already Exists")
-            {
-                return Result;
-            }
-            else
-            {
-                return "Error To Save";
-            }
+            //if ((Result == "Product Save Sucessfully!!!") || (Result == "Product Update Sucessfully!!!"))
+            //{
+            //    return Result;
+            //}
+            //else if (Result == "Product Name Already Exists")
+            //{
+            //    return Result;
+            //}
+            //else
+            //{
+            //    return "Error To Save";
+            //}
+            return Result;
         }
 
         public DataSet BindProductToGrid(int productID, int CatID, int SubCatId, string ProductName)
@@ -71,6 +72,42 @@ namespace WPF_ImageClassLibrary
             count = cmd.ExecuteScalar().ToString();
             con.Close();
             return count;
+        }
+
+        //public string GetProductCountUpdate(int CategoryID,int SubCategoryID)
+        //{
+        //    string ProductId;
+        //    con = conn.getConnection();
+        //    SqlCommand cmd = new SqlCommand("GetProductCountUpdate_SP", con);
+        //    cmd.Parameters.AddWithValue("@CategoryID", CategoryID);
+        //    cmd.Parameters.AddWithValue("@SubCategoryID", SubCategoryID);
+        //    cmd.CommandType = CommandType.StoredProcedure;
+        //    SqlDataAdapter sqlDa = new SqlDataAdapter(cmd);
+        //    con.Open();
+        //    ProductId = cmd.ExecuteScalar().ToString();
+        //    con.Close();
+        //    return ProductId;
+        //}
+
+        public string DeleteProduct(int ProductId, string UpdatedDate)
+        {
+            string Result;
+            con = conn.getConnection();
+            SqlCommand cmd = new SqlCommand("DeleteProduct_SP", con);
+            cmd.CommandType = CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@ProductID", ProductId);
+            cmd.Parameters.AddWithValue("@UpdatedDate", UpdatedDate);
+            con.Open();
+            Result = cmd.ExecuteScalar().ToString();
+            con.Close();
+            if (Result == "Product Deleted Sucessfully!!!")
+            {
+                return Result;
+            }
+            else
+            {
+                return "Error To Delete";
+            }
         }
     }
 }
