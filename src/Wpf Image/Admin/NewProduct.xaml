@@ -12,13 +12,19 @@
                         <DataGridTextColumn Binding="{Binding SubCategoryName}" Header="Sub Category Name" Width="*" />
                         <DataGridTextColumn Binding="{Binding ProductName}" Header="ProductName" Width="*" />
                         <DataGridTextColumn Binding="{Binding ImagePath}" Header="ImagePath" Width="*" />
+                        <DataGridTextColumn Binding="{Binding CategoryID}" Header="CategoryID" Visibility="Hidden" />
+                        <DataGridTextColumn Binding="{Binding SubCategoryID}" Header="SubCategoryID" Visibility="Hidden" />
+                        
+
+
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Image Source="{Binding imgPath}"/>
+                                    <Image  Source="{Binding imgPath}"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
+                        
                     </DataGrid.Columns>
                     <DataGrid.ItemContainerStyle>
                         <Style TargetType="DataGridRow">
@@ -63,7 +69,7 @@
             <Grid>
                 <Button Content="Add" Height="26" HorizontalAlignment="Left" Margin="43,11,0,0" Name="btnAdd" VerticalAlignment="Top" Width="75" Click="btnAdd_Click_1" />
                 <Button Content="Delete" Height="26" HorizontalAlignment="Left" Margin="43,51,0,0" Name="btnDelete" VerticalAlignment="Top" Width="75" Click="btnDelete_Click" />
-                <Button Content="Cancel" Height="26" HorizontalAlignment="Left" Margin="43,95,0,0" Name="btnCancel" VerticalAlignment="Top" Width="75" />
+                <Button Content="Cancel" Height="26" HorizontalAlignment="Left" Margin="43,95,0,0" Name="btnCancel" VerticalAlignment="Top" Width="75" Click="btnCancel_Click" />
             </Grid>
         </GroupBox>
     </Grid>

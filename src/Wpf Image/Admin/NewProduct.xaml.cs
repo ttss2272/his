@@ -70,17 +70,8 @@ namespace Wpf_Image.Admin
             }
         }
         #endregion
-        /*
-         * Created By:-Sameer A. Shinde
-         * Date:-01/12/2015
-         * Purpose:-Add Click
-         */
-        #region------------------------btnAdd_Click()------------------------------------------------
-        private void btnAdd_Click(object sender, RoutedEventArgs e)
-        {
-           
-        }
-        #endregion
+        
+        
         /*
          * Created By:-Sameer A. Shinde
          * Date:-01/12/2015
@@ -116,23 +107,20 @@ namespace Wpf_Image.Admin
         #region------------------------BindGridView()-------------------------------------------
         private void BindGridView()
         {
+            if(cmbSearchCatName.SelectedValue!=null)
+            {
+                cmbSearchCatName.SelectedValue ="0";
+                
+
+            }
             DataSet ds = objProduct.BindProductToGrid(0, Convert.ToInt32(cmbSearchCatName.SelectedValue), Convert.ToInt32(cmbSubCatName.SelectedValue), txtProductName.Text);
             
             if (ds.Tables[0].Rows.Count > 0)
             {
 
                 dgvProduct.ItemsSource = ds.Tables[0].DefaultView;
-
-                //string ImagePaths = ds.Tables[0].Rows[0]["ImagePath"].ToString();
-                //string name = null;
-                
-                //string destinationPath = GetDestinationPath(name, "\\Images\\Admin\\Image");
-                //System.Windows.Media.Imaging.BitmapImage logo = new System.Windows.Media.Imaging.BitmapImage();
-                //logo.BeginInit();
-                //BitmapImage btm = new BitmapImage(new Uri(destinationPath, UriKind.Relative));
-                //logo.UriSource = new Uri(destinationPath + ImagePaths);
-                //logo.EndInit();
-                                
+                //dgvProduct.Items.Add(new BitmapImage(new Uri(ds.Tables[0].Rows[0]["imgPath"].ToString())));
+                                                
             }
             else
             {
@@ -179,22 +167,62 @@ namespace Wpf_Image.Admin
         {
             try
             {
-
+                string NewImgPath = null;
                 CatgoryName = cmbAddCatName.Text;
                 SubCategoryName = cmbAddSubCatName.Text;
-                string ProductCount = objProduct.GetProductCount();
-                int count = Convert.ToInt32(ProductCount);
-                count = count + 1;
-                string imgName = txtAddImagePath.Text;
-                string NewImgPath = CatgoryName + SubCategoryName + "00" + count + imgName;
+                if (btnSave.Content == "Save")
+                {
+                    string ProductCount = objProduct.GetProductCount();
+                    int count = Convert.ToInt32(ProductCount);
+                    count = count + 1;
+                    string imgName = txtAddImagePath.Text;
+                    NewImgPath = CatgoryName + SubCategoryName + "00" + count + imgName;
+                }
+                else
+                {
+                    //int CategoryIDUpdate = Convert.ToInt32(cmbAddCatName.SelectedValue);
+                    //int SubCategoryIDUpdate = Convert.ToInt32(cmbAddSubCatName.SelectedValue);
+                    //string ProductCountUpdate = objProduct.GetProductCountUpdate(CategoryIDUpdate, SubCategoryIDUpdate);
+                    //int count = Convert.ToInt32(ProductCountUpdate);
+                    //count = count + 1;
+                    string imgName = txtAddImagePath.Text;
+                    NewImgPath = CatgoryName + SubCategoryName +  imgName;
+                    
+                }
                 string result = objProduct.SaveProduct(ProductId, CategoryID, SubCategoryID, ProductName, NewImgPath, IsActive, IsDeleted);
                // string name = System.IO.Path.GetFileName(filepath);
-                string destinationPath = GetDestinationPath(NewImgPath, "\\Images\\Admin\\Image");
+                if (result == "Product Save Sucessfully!!!")
+                {
 
-                File.Copy(filepath, destinationPath, true);
-                MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
-                ClearFields();
+                    string destinationPath = GetDestinationPath(NewImgPath, "\\Images\\Admin\\Image");
 
+                    File.Copy(filepath, destinationPath, true);
+                    MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
+                    ClearFields();
+                }
+                else if (result == "Product Update Sucessfully!!!")
+                {
+                    string destinationPath = GetDestinationPath(NewImgPath, "\\Images\\Admin\\Image");
+
+                    if (!System.IO.File.Exists(destinationPath))
+                    {
+                        destinationPath = GetDestinationPath(NewImgPath, "\\Images\\Admin\\Image");
+
+                        File.Copy(filepath, destinationPath, true);
+                    }
+                    MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
+                    ClearFields();
+                }
+                else if (result == "Product Name Already Exists")
+                {
+                    MessageBox.Show(result, "Result Message", MessageBoxButton.OKCancel);
+                    ClearFields();
+                }
+                else
+                {
+                    MessageBox.Show(result, "Error Message", MessageBoxButton.OKCancel);
+                    ClearFields();
+                }
             }
             catch (Exception ex)
             {
@@ -281,7 +309,7 @@ namespace Wpf_Image.Admin
          * Date:-01/12/2015
          * Purpose:-Browse Image for Save
          */
-        #region--------------------------SetParameters()-----------------------------------------------
+        #region--------------------------btnBrowse_Click()-----------------------------------------------
         private void btnBrowse_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -446,41 +474,53 @@ namespace Wpf_Image.Admin
         #region---------------------RowDoubleclick------------------------------------------
         private void Row_DoubleClick(object sender, MouseButtonEventArgs e)
         {
-            //dvCategory.Visibility = Visibility.Hidden;
-            //canvas1.Visibility = Visibility.Visible;
-            //canvas1.Margin = new Thickness(150, 125, 0, 0);
-            //cmbSearchCatName.IsEnabled = false;
-            //txtSearchSubCatName.IsEnabled = false;
-            //btnSearch.IsEnabled = false;
-            //try
-            //{
-            //    object item = dvCategory.SelectedItem;
-            //    string CategoryName = (dvCategory.SelectedCells[1].Column.GetCellContent(item) as TextBlock).Text;
-            //    string SubCategoryName = (dvCategory.SelectedCells[2].Column.GetCellContent(item) as TextBlock).Text;
+            dgvProduct.Visibility = Visibility.Hidden;
+            canvas1.Visibility = Visibility.Visible;
+            canvas1.Margin = new Thickness(150, 155, 0, 0);
+            cmbSearchCatName.IsEnabled = false;
+            cmbSubCatName.IsEnabled = false;
+            txtProductName.IsEnabled = false;
+            btnSearch.IsEnabled = false;
+            try
+            {
+                object item = dgvProduct.SelectedItem;
+                int ProductID = Convert.ToInt32(((System.Data.DataRowView)(dgvProduct.CurrentItem)).Row.ItemArray[0].ToString());
+                int CategoryID = Convert.ToInt32(((System.Data.DataRowView)(dgvProduct.CurrentItem)).Row.ItemArray[6].ToString());
+                int SubCategoryID = Convert.ToInt32(((System.Data.DataRowView)(dgvProduct.CurrentItem)).Row.ItemArray[7].ToString());
+                string ProductName = Convert.ToString(((System.Data.DataRowView)(dgvProduct.CurrentItem)).Row.ItemArray[1].ToString());
+                string ImagePath = Convert.ToString(((System.Data.DataRowView)(dgvProduct.CurrentItem)).Row.ItemArray[2].ToString());
 
+                DataSet ds = objProduct.BindProductToGrid(ProductID, CategoryID, SubCategoryID, ProductName);
+                if (ds.Tables.Count > 0)
+                {
+                    if (ds.Tables[0].Rows.Count > 0)
+                    {
 
-
-            //    DataSet ds = objSubCategory.BindCategoryInSub(0, CategoryID, SubCategoryName);
-            //    if (ds.Tables.Count > 0)
-            //    {
-            //        if (ds.Tables[0].Rows.Count > 0)
-            //        {
-
-            //            UpID = Convert.ToInt32(ds.Tables[0].Rows[0]["SubCategoryID"]);
-            //            BindCategoryforAdd();
-            //            cmbSaveSubCatName.Text = ds.Tables[0].Rows[0]["CategoryName"].ToString();
-            //            txtSubCatName.Text = ds.Tables[0].Rows[0]["SubCategoryName"].ToString();
-
-
-            //            btnDelete.IsEnabled = true;
-            //            btnSave.Content = "Update";
-            //        }
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show(ex.Message.ToString());
-            //}
+                        UpID = Convert.ToInt32(ds.Tables[0].Rows[0]["ProductID"]);
+                        cmbAddCatName.Text = ds.Tables[0].Rows[0]["CategoryName"].ToString();
+                        cmbAddSubCatName.Text = ds.Tables[0].Rows[0]["SubCategoryName"].ToString();
+                        txtAddProductName.Text = ds.Tables[0].Rows[0]["ProductName"].ToString();
+                        txtAddImagePath.Text = ds.Tables[0].Rows[0]["ImagePath"].ToString();
+                        //string imgname = txtAddImagePath.Text;
+                        //edit image
+                        string name = null;
+                        //name = System.IO.Path.GetFileName(filepath);
+                        string destinationPath = GetDestinationPath(ImagePath, "\\Images\\Admin\\Image");
+                        System.Windows.Media.Imaging.BitmapImage logo = new System.Windows.Media.Imaging.BitmapImage();
+                        logo.BeginInit();
+                        BitmapImage btm = new BitmapImage(new Uri(destinationPath, UriKind.Relative));
+                        logo.UriSource = new Uri(destinationPath);
+                        logo.EndInit();
+                        this.image1.Source = logo;
+                        btnDelete.IsEnabled = true;
+                        btnSave.Content = "Update";
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
         }
         #endregion
 
@@ -499,10 +539,64 @@ namespace Wpf_Image.Admin
             btnSearch.IsEnabled = false;
             cmbSearchCatName.IsEnabled = false;
         }
-
+        /*
+         * Created By:-Sameer A. Shinde
+         * Date:-01/12/2015
+         * Purpose:-Add Click
+         */
+        #region------------------------btnAdd_Click()------------------------------------------------
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                if (Validate())
+                {
+                    MessageBoxResult result = MessageBox.Show("Do You Want to delete?", "Delete", MessageBoxButton.YesNoCancel);
+                    if (result.Equals(MessageBoxResult.Yes))
+                    {
+                        SetParameters();
+                        DeleteProduct();
+                        BindGridView();
+                    }
+                }
+            }
 
+            catch (Exception ex)
+            {
+
+                MessageBox.Show(ex.Message.ToString());
+            }
+
+        }
+
+        private void DeleteProduct()
+        {
+            if (UpID != 0)
+            {
+                ProductId = UpID;
+
+                string Result = objProduct.DeleteProduct(ProductId, UpdatedDate);
+                if (Result == "Product Deleted Sucessfully!!!")
+                {
+                    MessageBox.Show(Result, "Product Delete Sucessfully", MessageBoxButton.OK, MessageBoxImage.Information);
+                    ClearFields();
+                }
+                else
+                {
+                    MessageBox.Show(Result, "Error To Delete", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please Select Product Details ", "Delete Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+            }
+        }
+        #endregion
+
+        private void btnCancel_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }
